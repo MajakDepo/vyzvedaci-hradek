@@ -44,12 +44,19 @@
         #success-area { margin-top: 20px; padding-top: 20px; border-top: 1px dashed var(--success); }
         #success-text { color: #e6edf3; font-size: 1em; border-left: 2px solid var(--success); padding-left: 15px; }
 
-        /* Vzhled pro přidávané obrázky ve hře */
-        .game-img { max-width: 100%; height: auto; border-radius: 8px; margin-top: 15px; margin-bottom: 15px; border: 1px solid var(--accent-color); display: block; }
+        /* Vzhled pro přidávané obrázky ve hře a Lightbox */
+        .game-img { width: 100%; max-height: 400px; object-fit: contain; border-radius: 8px; margin-top: 15px; margin-bottom: 15px; border: 1px solid var(--accent-color); display: block; cursor: zoom-in; background: #000; }
+        
+        #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; display: flex; justify-content: center; align-items: center; flex-direction: column; cursor: zoom-out; }
+        #lightbox:not(.hidden) { display: flex !important; }
+        #lightbox-img { max-width: 95%; max-height: 90%; border-radius: 8px; border: 2px solid var(--accent-color); }
+        #lightbox-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; }
 
         /* Žebříček, Vzkazy a Inventář */
-        .leaderboard-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #30363d; }
+        .leaderboard-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #30363d; align-items: center; }
         .leaderboard-row:nth-child(1) { color: var(--accent-color); font-weight: bold; font-size: 1.1em; }
+        .player-st-badge { font-size: 0.75em; color: #8b949e; background: #21262d; padding: 2px 6px; border-radius: 4px; margin-left: 8px; }
+        
         .msg-box { background: #0d1117; padding: 12px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #30363d; }
         .msg-header { font-size: 0.8em; color: var(--accent-color); margin-bottom: 5px; display: flex; justify-content: space-between;}
         .msg-actions { display: flex; gap: 10px; margin-top: 10px; font-size: 0.8em; }
@@ -61,6 +68,11 @@
     </style>
 </head>
 <body>
+
+    <div id="lightbox" class="hidden" onclick="closeLightbox()">
+        <span id="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="" alt="Zvětšený obrázek">
+    </div>
 
     <div class="container">
         <h1>Stíny Hrádku</h1>
@@ -150,7 +162,16 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // STRUKTURA HRY - Všech 10 stanovišť
+        // Otevření a zavření Lightboxu pro obrázky
+        window.openLightbox = function(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.remove('hidden');
+        }
+        window.closeLightbox = function() {
+            document.getElementById('lightbox').classList.add('hidden');
+        }
+
+        // STRUKTURA HRY
         const stations = {
             0: {
                 story: `<div style="border-bottom: 1px solid var(--error); margin-bottom: 15px; padding-bottom: 10px;">
@@ -175,7 +196,7 @@
                 successMessage: `<p><strong style="color: var(--success);">TOTOŽNOST OVĚŘENA. PŘÍSTUP POVOLEN.</strong></p>
                                  <p>Tvůj první cíl je <strong>Schubertova vila</strong>. Dojdi k její hlavní bráně. Až tam budeš a připravíš se na první výzvu, klikni na tlačítko níže.</p>`
             },
-            1: { // 1. Stanoviště - Sídlo rodu (Schubertova vila)
+            1: { 
                 story: `<p>„Dobrá práce, jsi na místě. Schubertova vila. Kdysi honosné sídlo, ze kterého starý pan Schubert železnou rukou dohlížel na své rozrůstající se impérium. V těchto zdobených zdech padala nejtajnější rozhodnutí a rodily se nápady, které měnily tvář celého průmyslu. Museli jsme začít právě tady, u kořenů. Z mých informací vyplývá, že agenti Syndikátu vilu nedávno prohledávali, ale jsou to jen arogantní žoldáci. Dívají se, ale nevidí. Stará architektura má svá slepá místa, která znají jen ti, co ji stavěli. Zapoj svůj detektivní instinkt a nenech se zmást okolím.“</p>`,
                 task: `<strong style="color: var(--accent-color);">ÚKOL:</strong><br>Když stojíš před hlavní bránou, prohlédni si pozorně schody, které vedou ke dveřím uprostřed budovy. Kolik schodů vede ke dveřím od trávníku?`,
                 key: "9", points: 10,
@@ -185,7 +206,7 @@
                                  <p>U lístku od Antonína jsi našel ještě útržek, na kterém stálo: <strong>“Mirkovi je 27 let. Nikole je 46 let.”</strong> <em>(Položka uložena do inventáře)</em></p>
                                  <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Vydej se k Nise. Hledej místo a kámen, který připomíná dny, kdy se řeka vzepřela, opustila své koryto a ukázala svou ničivou sílu.</p>`
             },
-            2: { // 2. Stanoviště - Nisa (pamětní kámen povodní)
+            2: { 
                 story: `<p>„Stojíš u řeky Nisy. Ta stejná voda, která poháněla Schubertovy stroje, dokázala i ničit. Přesně tuto nespoutanou energii chtěl pan Schubert zkrotit. Na břehu řeky je chladno a stíny se prodlužují. Syndikát už pročesává břehy, musíš být rychlejší než oni a najít druhý kus nákresu. Buď ostražitý!“</p>`,
                 task: `<strong style="color: var(--accent-color);">ÚKOL:</strong><br>Odemkni schránku pod kamenem. Kód k ní najdeš přímo na něm. Řadová číslovka označuje číselný kód pro zadání.`,
                 key: "2010", points: 10,
@@ -193,7 +214,7 @@
                                  <p>Kód funguje! Pod kamenem jsi nahmatal kovový válec. Skrývá druhý fragment plánu, který ukazuje podzemní přivaděče vody a masivní filtrační systém. Záznam na zadní straně šokuje: <em>„Schubert na tohle obří vodní dílo nebyl sám! Neutajil by to. Spojil se se svými největšími rivaly – s rodinou Müllerů. Dvě nejmocnější dynastie Hrádku táhly za jeden provaz. Musíme zjistit, co skrývají v dolní části města, kde měli Müllerovi své dělníky a kde se obě rodiny tajně stýkaly.“</em></p>
                                  <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Přes Jiřího z Poděbrad se vydej až na velké prostranství.</p>`
             },
-            3: { // 3. Stanoviště - Dolní náměstí
+            3: { 
                 story: `<p>„Zatímco nahoře se dělala oficiální politika, tady dole tepal skutečný život a dělníci tudy mířili na směnu. Zde se Schubert a Müller tajně scházeli v zakouřených sklepeních, aby spojili své části plánů dohromady mimo zraky veřejnosti. Hledej místo, kde Antonín ukryl třetí díl technické dokumentace, než ho Syndikát vyrušil.“</p>`,
                 task: `<strong style="color: var(--accent-color);">ÚKOL:</strong><br>Hledej mě tam, kde se potkává Oto s Brunem a Ulrich s Václavem. Do odpovědi zadej číslo této budovy.`,
                 key: "34", points: 10,
@@ -202,7 +223,7 @@
                                  <p>Ve schránce ležel i starý rezavý šroub, na kterém je vyryto <strong>“S&M 50.859”</strong>. <em>(Položka uložena do inventáře)</em></p>
                                  <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Postav se přesně doprostřed prostranství a vydej se 215 metrů v azimutu 338°. Nejdřív se ale pozorně podívej na domy stojící na náměstí. Počet domů zde stojících se ti ještě bude hodit.</p>`
             },
-            4: { // 4. Stanoviště - městský park (meteostanice)
+            4: { 
                 story: `<p>„Klid pod korunami stromů je jen zdání. Právě sem dříve chodili továrníci sledovat, jaké bude počasí. Antonín zjistil, že Schubertův stroj fungoval v přímé závislosti na atmosférickém tlaku. Někde tady v okolí staré meteostanice musel zanechat čtvrtý kus technického výkresu dřív, než se musel dát znovu na útěk. Dávej si pozor, jestli tě někdo nesleduje zpoza stromů.“</p>`,
                 task: `<strong style="color: var(--accent-color);">ÚKOL:</strong><br>Od počtu vyražených děr na té straně meteostanice, kde není žádný ciferník, odečti počet domů stojících na náměstí, odkud jsi právě přišel.`,
                 key: "27", points: 10,
@@ -211,7 +232,7 @@
                                  <p>Antonínův krvavý vzkaz dokazuje, že se smyčka stahuje: <em>„Vítr se obrací proti nám. Syndikát mi je v patách, sledují mě parkem. Musím hledat útočiště tam, kam se bojí vstoupit, a kde mi silné zdi poskytnou ochranu...“</em></p>
                                  <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Vzkaz přiložený k fragmentu pokračuje: Dál musíš hledat útočiště u Boha. Tam, kde město nejhlasitěji odbíjí čas.</p>`
             },
-            5: { // 5. Stanoviště - Kostel
+            5: { 
                 story: `<p>„Záznamy nelhaly. Když šlo Schubertům do tuhého a Syndikát začal slídit kolem jejich aktivit, museli hledat útočiště tam, kam se stíny neodváží. U Boha. Církev měla v Hrádku obrovskou moc a chrámové zdi jsou pevné. Antonínův deník se zde zmiňuje o ‚místě, kde město nejhlasitěji odbíjí čas a kde svatí shlížejí na hříchy smrtelníků‘. Až dojdeš na ono místo, postav se čelem k hlavnímu vchodu. Vnímej tu monumentalitu. Někde přímo před tebou, pod dohledem kamenných tváří, nechal Antonín pátou část výkresů.“</p>`,
                 task: `<strong style="color: var(--accent-color);">ÚKOL:</strong><br>Spočítej skleněné destičky, které vidíš před sebou v okně.`,
                 key: "12", points: 10,
@@ -221,7 +242,7 @@
                                  <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Před vedením města, na prostranství, kam si lidé chodili pro vodu, stoupni si přímo nad toto místo. Počet slov v citátu, který tě obklopuje, ti pomůže najít další místo (A). Poslední dvě číslovky v letopočtu napsaném za citátem ti rovněž pomohou (B).<br>
                                  Souřadnice: 50.8(A)4506N, 14.84(B)817E</p>`
             },
-            6: { // 6. Stanoviště - Místo nálezu vampíra Tobiase
+            6: { 
                 story: `<p>„Místo opředené tajemstvím a chované ve stínech kostelů z obou stran. Naleziště kosterních pozůstatků tzv. Hrádeckého vampíra. Mrtví už nepromluví, ale ono naleziště mluví za ně. Antonín sem zamířil, aby do země, které se pověrčiví lidé vyhýbají, ukryl šestý kus nákresu. Cítíš, že ty největší odpovědi o tom, z čeho byl stroj postaven, jsou nadosah.“</p>`,
                 task: `<strong style="color: var(--accent-color);">ÚKOL:</strong><br>[Doplň úkol pro toto stanoviště, abys jej odemkl]`,
                 key: "DOPLNIT", points: 10,
@@ -230,7 +251,7 @@
                                  <p>Antonínův vzkaz odhaluje logistický problém: <em>„Byl to gigant. Všechna ta těžká ocel se nemohla po městě pohybovat jen tak bez povšimnutí na vozech. Všechno to obrovské množství materiálu muselo přijet po kolejích! Musím jít prověřit místo, kde se rodily a umíraly vlakové transporty.“</em></p>
                                  <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Další místo je na těchto souřadnicích: 50.856(M)00N, 14.8(N)9005E</p>`
             },
-            7: { // 7. Stanoviště - Nádraží
+            7: { 
                 story: `<p>„Dorazil jsi na místo, které do života textilní továrny neodmyslitelně patřilo. Přivři oči a představ si ten ohlušující rachot a shon. Desítky vagonů se tu denně plnily tunami těch nejjemnějších látek, zatímco do vzduchu stoupala oblaka černé uhelné páry. Byla to hlavní tepna celé Schubertovy logistiky. Antonín ukryl sedmou část plánu právě tady. Nenechal ale stopu přímo na očích zvědavých cestujících. Musíš se vydat dál. Další fragment se ukrývá přesně 170 metrů od místa, kde právě stojíš, a to v azimutu 336°. Zůstaň ve střehu!“</p>`,
                 task: `<strong style="color: var(--accent-color);">ÚKOL:</strong><br>Dojdi na toto místo a spočítej kolik postav zde vidíš.`,
                 key: "4", points: 10,
@@ -239,9 +260,9 @@
                                  <p>Antonínův rukopis je znatelně nervóznější, inkoust je rozmazaný: <em>„Byli i tady. Viděl jsem je, jak prohledávají staré výhybky a sklady. Ocelové cesty jsou odříznuté, tudy uniknout nemůžu.“</em></p>
                                  <p>V zásuvce ležela stará robustní matice, na které je vyryto <strong>“S&M 14.853”</strong>. <em>(Položka uložena do inventáře)</em></p>
                                  <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Vzkaz přiložený k fragmentu pokračuje: „Musím se přesunout přímo do srdce jejich někdejšího impéria. Najdi místo, kde kdysi stála hlavní Müllerova strojírna. Pomůže ti přiložená mapa.“</p>
-                                 <img src="mapa.PNG" class="game-img" alt="Mapa s instrukcemi">`
+                                 <img src="mapa.PNG" class="game-img" alt="Mapa s instrukcemi" onclick="openLightbox(this.src)">`
             },
-            8: { // 8. Stanoviště - Müllerova továrna, Penny
+            8: { 
                 story: `<p>„Kdysi pulzující továrna plná hluku strojů, dnes by to tu nikdo z té doby nepoznal. Ale historii nelze jen tak vymazat. Kus staré továrny tu stále stojí jako mlčící strážce času. Někde tady, ve stínu staré zástavby, která přežila demolici, leží osmý kus Schubertova nákresu.“</p>`,
                 task: `<strong style="color: var(--accent-color);">ÚKOL:</strong><br>Ve štítu jedné z původních budov jsou umístěna dvě písmena. Vlož je do dekodéru.`,
                 key: "AM", points: 10,
@@ -250,15 +271,15 @@
                                  <p>Na okraji papíru je krvavý otisk prstu a spěšný vzkaz: <em>„Stroj tu už není! Rozebrali ho. Měli mě, sotva jsem se jim vytrhl. Syndikát mě sleduje, odřízli mi cestu do centra. Musím nahoru, musím získat výhodu terénu!“</em></p>
                                  <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Neztrácej čas, agenti Syndikátu jsou blízko. Antonín utíkal nahoru do kopce, aby získal přehled. Vystoupej za ním na Zlatou výšinu, tam, kde město leží jako na dlani.</p>`
             },
-            9: { // 9. Stanoviště - Zlatá výšina
+            9: { 
                 story: `<p>„Jsou tu vidět stopy po zoufalém boji. Polámané větve a rozrytá hlína ukazují, že Antonín tu byl zahnán do kouta. Syndikát mu šlapal na paty. S vědomím, že možná neunikne, zde musel narychlo ukrýt předposlední část výkresu. Musíš najít, co po sobě zanechal, než to padne do nesprávných rukou.“</p>`,
                 task: `<strong style="color: var(--accent-color);">ÚKOL:</strong><br>Na sloupu č. 108 v ulici Zlatá výšina je cedulka. Zadej kód z druhého řádku ve formátu */**`,
                 key: "9/600", points: 10,
                 successMessage: `<p><strong style="color: var(--success);">KÓD PŘIJAT.</strong></p>
                                  <p>Získal jsi devátý fragment plánu. Obsahuje nákres jakési antény nebo vysílače na vrcholu stroje. Společně s nákresem jsi pod kořeny našel starý diktafon. Baterie sotva funguje, ale Antonínův sípající hlas je jasný: <em>„Nemám úniku. Dostali mě... Ale to hlavní nezískají. Nejdůležitější díl plánu – samotné srdce stroje a schéma jeho spuštění – jsem ukryl mimo jejich dosah.“</em></p>
-                                 <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Matky a šrouby přeci patří k sobě.</p>`
+                                 <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Matky a šrouby přeci patří k sobě.<br>**</p>`
             },
-            10: { // 10. Stanoviště - Cihelna
+            10: { 
                 story: `<p>„Jsi v cíli. Rozlehlý areál staré cihelny. Místo je opuštěné a zarostlé. Po budovách nebo strojích už není ani památky, ale ty moc dobře víš, že tu nejsi sám. Čekají, až uděláš chybu. Tady se všechno rozhodne. Někde zde, pod nánosy hlíny a času, leží desátý, poslední a nejdůležitější fragment Schubertova plánu – Srdce stroje. Nedovol jim ho získat.“</p>`,
                 task: `<strong style="color: var(--accent-color);">ÚKOL:</strong><br>Jsi u tří stromů, které vyrůstají z jednoho místa. Přesně 200 metrů od tebe v azimutu 200° je ukryta zpráva, kterou musíš vyluštit a zadat do odpovědi.<br><br>Klíč k vyluštění je tento:<br>5/3; 2/1; 21/1; 7/2; 28/2; 13/3; 85/3; 10/1 _ 1/1; 2/2; 8/2; 9/3<br>(podtržítko se do odpovědi nepíše)`,
                 key: "SCHUBERTŮV PLÁN", points: 10,
@@ -266,7 +287,7 @@
                                  <p>Obrovská gratulace, agente! Našel jsi místo, kde byl zakopán desátý a poslední fragment. Nákres hlavního reaktoru. V tu chvíli se všechny díly v tvé aplikaci spojily v jeden obří, kompletní technický výkres – Schubertův plán je kompletní.</p>
                                  <p>Jakmile jsi zadal finální kód, systém se zašifroval a plány se bezpečně odeslaly do centrálního archivu mimo dosah kohokoliv neoprávněného. Slyšíš spěšné kroky a zklamané startování motorů – agenti Syndikátu se stahují do stínů. Prohráli. Zachránil jsi převratný odkaz minulosti a dokončil jsi práci Antonína Krále. Dokázal jsi, že máš ostříží zrak a logické myšlení. Tvé jméno se v Hrádku nad Nisou stane legendou.</p>
                                  <p><strong>Mise splněna.</strong></p>
-                                 <p>Podívej se do Žebříčku a zanech zprávu na Šifrovaném kanálu o svém vítězství!</p>`
+                                 <p>Zkontroluj svůj výsledek v Žebříčku a zanech zprávu na Šifrovaném kanálu o svém vítězství!</p>`
             }
         };
 
@@ -344,7 +365,6 @@
             
             let hasItems = false;
             
-            // Logika inventáře na základě postupu hrou
             if (userData.aktualniStanoviste >= 2) { 
                 html += `<div class="inv-item">📜 <strong>Útržek papíru:</strong><br><em>"Mirkovi je 27 let. Nikole je 46 let."</em></div>`;
                 hasItems = true;
@@ -374,8 +394,10 @@
             let rank = 1;
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
+                let statusInfo = data.aktualniStanoviste > 10 ? "Dokončeno" : `St. ${data.aktualniStanoviste}`;
+                
                 html += `<div class="leaderboard-row">
-                            <span>${rank}. ${data.prezdivka}</span>
+                            <span>${rank}. ${data.prezdivka} <span class="player-st-badge">${statusInfo}</span></span>
                             <span>${data.body} bodů</span>
                          </div>`;
                 rank++;
@@ -444,15 +466,28 @@
         function updateHistoryDropdown() {
             const select = document.getElementById('history-select');
             select.innerHTML = '';
-            for (let i = 0; i <= userData.aktualniStanoviste; i++) {
+            
+            // Ošetření pro případ po dokončení hry
+            const maxStation = Math.min(userData.aktualniStanoviste, Object.keys(stations).length - 1);
+            
+            for (let i = 0; i <= maxStation; i++) {
                 if(stations[i]) {
                     const opt = document.createElement('option');
                     opt.value = i;
                     let name = i === 0 ? "Nouzový protokol" : `Stopa č. ${i}`;
-                    opt.innerText = (i === userData.aktualniStanoviste) ? `AKTIVNÍ: ${name}` : `Archiv: ${name}`;
+                    // Pokud je hráč právě na tomto stanovišti, nebo hru už dohrál a kouká na 10, svítí AKTIVNÍ
+                    opt.innerText = (i === userData.aktualniStanoviste || (userData.aktualniStanoviste > 10 && i === 10)) ? `AKTIVNÍ: ${name}` : `Archiv: ${name}`;
                     select.appendChild(opt);
                 }
             }
+            
+            if (userData.aktualniStanoviste > 10) {
+                const opt = document.createElement('option');
+                opt.value = 11;
+                opt.innerText = "Shrnutí mise";
+                select.appendChild(opt);
+            }
+            
             select.value = viewingStationIndex;
         }
 
@@ -475,25 +510,33 @@
                     inputGroup.classList.add('hidden');
                     document.getElementById('success-text').innerHTML = s.successMessage;
                     successArea.classList.remove('hidden');
-                    nextBtn.classList.add('hidden'); 
+                    
+                    // Změna textu tlačítka u posledního (10.) stanoviště, když hráč právě dohrál
+                    if (indexToRender === 10 && userData.aktualniStanoviste === 10) {
+                        nextBtn.innerText = "Dokončit misi a otevřít žebříček";
+                        nextBtn.classList.remove('hidden');
+                    } else {
+                        nextBtn.classList.add('hidden'); 
+                    }
                 } else {
                     inputGroup.classList.remove('hidden');
                     document.getElementById('answer-input').value = "";
                     msgArea.innerText = "";
                     successArea.classList.add('hidden');
+                    nextBtn.innerText = "Přesunout se na další místo";
                     nextBtn.classList.remove('hidden');
                 }
             } else {
-                document.getElementById('story-area').innerHTML = "<p>Gratuluji! Úspěšně jsi dokončil celé pátrání.</p>";
+                // Obrazovka po kompletním dohrání hry (index 11 a výš)
+                document.getElementById('story-area').innerHTML = "<p><strong style='color:var(--success); font-size:1.2em;'>Mise byla úspěšně dokončena!</strong></p><p>Schubertův plán je zachráněn a tvé jméno je zapsáno v legendách Hrádku nad Nisou.</p><p>Zvol si v menu nahoře jinou stopu, pokud si chceš příběh připomenout.</p>";
                 document.getElementById('task-area').classList.add('hidden');
-                document.getElementById('history-select').classList.add('hidden');
+                document.getElementById('history-select').classList.remove('hidden');
                 inputGroup.classList.add('hidden');
                 successArea.classList.add('hidden');
             }
         }
 
         document.getElementById('submit-btn').addEventListener('click', async () => {
-            // Trim and toUpperCase pro toleranci malých/velkých písmen a mezer
             const input = document.getElementById('answer-input').value.trim().toUpperCase();
             const currentStation = stations[userData.aktualniStanoviste];
             
@@ -523,8 +566,13 @@
                     aktualniPokusy: 0
                 });
                 
+                // Měníme text tlačítka pro úplný konec hry
+                if (userData.aktualniStanoviste > 10) {
+                    document.getElementById('next-station-btn').innerText = "Dokončit misi a otevřít žebříček";
+                }
+                
                 updateHistoryDropdown();
-                updateInventory(); // Okamžitá aktualizace předmětů po splnění
+                updateInventory(); 
             } else {
                 userData.aktualniPokusy += 1;
                 await updateDoc(doc(db, "hraci", currentUser.uid), { 
@@ -537,9 +585,17 @@
         });
 
         document.getElementById('next-station-btn').addEventListener('click', () => {
-            viewingStationIndex = userData.aktualniStanoviste;
-            document.getElementById('history-select').value = viewingStationIndex;
-            renderStation(viewingStationIndex);
+            if (userData.aktualniStanoviste > 10) {
+                // Přesun na žebříček a přepnutí view na Shrnutí mise (11)
+                viewingStationIndex = 11;
+                document.getElementById('history-select').value = viewingStationIndex;
+                renderStation(viewingStationIndex);
+                switchTab('leaderboard-tab');
+            } else {
+                viewingStationIndex = userData.aktualniStanoviste;
+                document.getElementById('history-select').value = viewingStationIndex;
+                renderStation(viewingStationIndex);
+            }
         });
     </script>
 </body>
