@@ -182,7 +182,7 @@
                 successMessage: `<p><strong style="color: var(--success);">KÓD PŘIJAT.</strong></p>
                                  <p>Skrytý mechanismus pod jedním ze schodů tiše cvakl. Uvnitř malého, prachem zapadaného výklenku jsi našel první fragment Schubertova plánu a lístek od Antonína.</p>
                                  <p><em>„Syndikát nepochopil, že tajemství neleží jen uvnitř domu, ale v cestách ven. Pokud chci zachránit plány, musím jít po stopách Schubertova obchodu. Zboží muselo neustále proudit. Cesta ven z města pro tak obrovský náklad byla vždycky ukuta z oceli a páry… Ale samotný stroj potřeboval ke svému chodu obrovskou sílu přírody.“</em></p>
-                                 <p>U lístku od Antonína jsi našel ještě útržek, na kterém stálo: <strong>“Adamovi je 27 let. Beatě je 46 let.”</strong> <em>(Položka uložena do inventáře)</em></p>
+                                 <p>U lístku od Antonína jsi našel ještě útržek, na kterém stálo: <strong>“Mirkovi je 27 let. Nikole je 46 let.”</strong> <em>(Položka uložena do inventáře)</em></p>
                                  <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Vydej se k Nise. Hledej místo a kámen, který připomíná dny, kdy se řeka vzepřela, opustila své koryto a ukázala svou ničivou sílu.</p>`
             },
             2: { // 2. Stanoviště - Nisa (pamětní kámen povodní)
@@ -228,7 +228,7 @@
                 successMessage: `<p><strong style="color: var(--success);">KÓD PŘIJAT.</strong></p>
                                  <p>Zámek cvakl. Pod jednou z dlažebních kostek leží šestý fragment plánu. Ukazuje těžké kovové pláty a spojovací nýty centrálního reaktoru.</p>
                                  <p>Antonínův vzkaz odhaluje logistický problém: <em>„Byl to gigant. Všechna ta těžká ocel se nemohla po městě pohybovat jen tak bez povšimnutí na vozech. Všechno to obrovské množství materiálu muselo přijet po kolejích! Musím jít prověřit místo, kde se rodily a umíraly vlakové transporty.“</em></p>
-                                 <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Další místo je na těchto souřadnicích: 50.856(A)00N, 14.8(B)9005E</p>`
+                                 <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Další místo je na těchto souřadnicích: 50.856(M)00N, 14.8(N)9005E</p>`
             },
             7: { // 7. Stanoviště - Nádraží
                 story: `<p>„Dorazil jsi na místo, které do života textilní továrny neodmyslitelně patřilo. Přivři oči a představ si ten ohlušující rachot a shon. Desítky vagonů se tu denně plnily tunami těch nejjemnějších látek, zatímco do vzduchu stoupala oblaka černé uhelné páry. Byla to hlavní tepna celé Schubertovy logistiky. Antonín ukryl sedmou část plánu právě tady. Nenechal ale stopu přímo na očích zvědavých cestujících. Musíš se vydat dál. Další fragment se ukrývá přesně 170 metrů od místa, kde právě stojíš, a to v azimutu 336°. Zůstaň ve střehu!“</p>`,
@@ -346,7 +346,7 @@
             
             // Logika inventáře na základě postupu hrou
             if (userData.aktualniStanoviste >= 2) { 
-                html += `<div class="inv-item">📜 <strong>Útržek papíru:</strong><br><em>"Adamovi je 27 let. Beatě je 46 let."</em></div>`;
+                html += `<div class="inv-item">📜 <strong>Útržek papíru:</strong><br><em>"Mirkovi je 27 let. Nikole je 46 let."</em></div>`;
                 hasItems = true;
             }
             if (userData.aktualniStanoviste >= 4) { 
