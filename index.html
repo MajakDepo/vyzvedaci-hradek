@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schubertův Plán</title>
+    <title>Stíny Hrádku - Schubertův Plán</title>
     <style>
         :root {
             --bg-color: #0f101a;
@@ -23,7 +23,23 @@
         .card { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid #30363d; border-top: 4px solid var(--accent-color); text-align: left; box-shadow: 0 10px 20px rgba(0,0,0,0.5); margin-bottom: 20px; }
         input, select, textarea { width: 100%; padding: 15px; background: var(--input-bg); border: 1px solid #30363d; color: white; border-radius: 6px; box-sizing: border-box; font-family: inherit; margin-bottom: 15px; font-size: 1em; }
         textarea { resize: vertical; min-height: 80px; }
-        select { cursor: pointer; color: var(--accent-color); font-weight: bold; margin-bottom: 25px; }
+        
+        /* Úprava šipky pro rozbalovací menu */
+        select { 
+            cursor: pointer; 
+            color: var(--accent-color); 
+            font-weight: bold; 
+            margin-bottom: 25px; 
+            -webkit-appearance: none; 
+            -moz-appearance: none; 
+            appearance: none; 
+            background-color: var(--input-bg); 
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); 
+            background-repeat: no-repeat; 
+            background-position: right 15px center; 
+            background-size: 20px; 
+            padding-right: 40px; 
+        }
         
         button { width: 100%; padding: 16px; background: var(--accent-color); color: #000; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 1em; transition: 0.3s; }
         button:hover { background: #f1c40f; transform: translateY(-2px); }
@@ -231,7 +247,7 @@
             },
             4: { 
                 story: `<p>„Klid pod korunami stromů je jen zdání. Právě sem dříve chodili továrníci sledovat, jaké bude počasí. Antonín zjistil, že Schubertův stroj fungoval v přímé závislosti na atmosférickém tlaku. Někde tady v okolí staré meteostanice musel zanechat čtvrtý kus technického výkresu dřív, než se musel dát znovu na útěk. Dávej si pozor, jestli tě někdo nesleduje zpoza stromů.“</p>`,
-                task: `<strong style="color: var(--accent-color);">ÚKOL:</strong><br>Od počtu vyražených děr na té straně meteostanice, kde není žádný ciferník, odečti počet domů na západní straně na náměstí, odkud jsi právě přišel.`,
+                task: `<strong style="color: var(--accent-color);">ÚKOL:</strong><br>Od počtu vyražených děr na té straně meteostanice, kde není žádný ciferník, odečti počet domů stojících na náměstí, odkud jsi právě přišel.`,
                 key: "27", points: 10,
                 successMessage: `<p><strong style="color: var(--success);">KÓD PŘIJAT.</strong></p>
                                  <p>Mechanismus v betonovém sloupu tiše cvakl. V tajné přihrádce leží čtvrtý fragment plánu. Jsou na něm narýsované obří lopatky jakési turbíny a citlivé barometrické ventily.</p>
@@ -246,7 +262,7 @@
                                  <p>Pod vstupním kamenem jsi našel voskem zpečetěnou obálku. Obsahuje pátý fragment plánu – složité schéma cívek a prvků pro usměrňování energie. Stroj zjevně potřeboval obrovský impuls k nastartování.</p>
                                  <p>Antonín k nákresu připsal varování: <em>„Církev mě neochrání navždy. Mají tu své informátory. Zítra v noci přesunu plány mezi mrtvé, na místo staré pověsti. Tam, kde nalezli toho, jenž se prý vracel ze záhrobí. Tam se neodváží...“</em></p>
                                  <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Před vedením města, na prostranství, kam si lidé chodili pro vodu, stoupni si přímo nad toto místo. Počet slov v citátu, který tě obklopuje, ti pomůže najít další místo (A). Poslední dvě číslovky v letopočtu napsaném za citátem ti rovněž pomohou (B).<br>
-                                 50.8(A)4506N, 14.84(B)817E</p>`
+                                 Souřadnice: 50.8(A)4506N, 14.84(B)817E</p>`
             },
             6: { 
                 story: `<p>„Místo opředené tajemstvím a chované ve stínech. Naleziště kosterních pozůstatků tzv. Hrádeckého vampíra. Mrtví už nepromluví, ale ono naleziště mluví za ně. Antonín sem zamířil, aby do země, které se pověrčiví lidé vyhýbají, ukryl šestý kus nákresu. Cítíš, že ty největší odpovědi o tom, z čeho byl stroj postaven, jsou nadosah.“</p>`,
@@ -266,11 +282,11 @@
                                  <p>Uvnitř podstavce sochy jsi nahmatal tajnou zásuvku, chytře maskovanou před zraky kolemjdoucích. Je v ní schovaný sedmý fragment plánu. Výkres zobrazuje obří hnací hřídel.</p>
                                  <p>Antonínův rukopis je znatelně nervóznější, inkoust je rozmazaný: <em>„Byli i tady. Viděl jsem je, jak prohledávají staré výhybky a sklady. Ocelové cesty jsou odříznuté, tudy uniknout nemůžu.“</em></p>
                                  <p>V zásuvce ležela stará robustní matice, na které je vyryto <strong>“S&M 14.853”</strong>. <em>(Položka uložena do inventáře)</em></p>
-                                 <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Vzkaz přiložený k fragmentu pokračuje: „Musím se přesunout přímo do srdce jejich někdejšího impéria. Najdi místo, kde kdysi stála hlavní Müllerova strojírna. Pomůže ti mapa, kterou máš u sebe.“</p>`
+                                 <p><strong style="color: var(--accent-color);">DALŠÍ INDICIE:</strong><br>Vzkaz přiložený k fragmentu pokračuje: „Musím se přesunout přímo do srdce jejich někdejšího impéria. Najdi místo, kde kdysi stála hlavní Müllerova strojírna. Pomůže ti přiložená mapa.“</p>`
             },
             8: { 
                 story: `<p>„Kdysi pulzující továrna plná hluku strojů, dnes by to tu nikdo z té doby nepoznal. Ale historii nelze jen tak vymazat. Kus staré továrny tu stále stojí jako mlčící strážce času. Někde tady, ve stínu staré zástavby, která přežila demolici, leží osmý kus Schubertova nákresu.“</p>`,
-                task: `<strong style="color: var(--accent-color);">ÚKOL:</strong><br>Ve štítu jedné z původních budov patřících ke strojírně, jsou umístěna dvě písmena. Vlož je do dekodéru.`,
+                task: `<strong style="color: var(--accent-color);">ÚKOL:</strong><br>Ve štítu jedné z původních budov jsou umístěna dvě písmena. Vlož je do dekodéru.`,
                 key: "AM", points: 10,
                 successMessage: `<p><strong style="color: var(--success);">KÓD PŘIJAT.</strong></p>
                                  <p>Máš to! V duté cihle na rohu jedné z budov jsi nalezl osmý fragment plánu, který zobrazuje mohutný komín odvádějící přebytečnou páru ze stroje vysoko nad město.</p>
@@ -379,7 +395,6 @@
                 html += `<div class="inv-item">🔩 <strong>Starý rezavý šroub:</strong><br>Je na něm vyryto <em>"S&M 50.859"</em></div>`;
                 hasItems = true;
             }
-            // ZMĚNA: Přidána logika pro zobrazení Mapy po splnění 6. stanoviště (takže při stavu >= 7)
             if (userData.aktualniStanoviste >= 7) { 
                 html += `<div class="inv-item">🗺️ <strong>Stará mapa Hrádku:</strong><br><span style="color: var(--accent-color); text-decoration: underline; cursor: pointer; font-weight: bold;" onclick="openLightbox('mapa.PNG')">MAPA (klikni pro zobrazení)</span></div>`;
                 hasItems = true;
